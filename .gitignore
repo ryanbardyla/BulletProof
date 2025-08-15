@@ -52,9 +52,15 @@ venv/
 *.bin
 !examples/*.dat
 
-# Logs
+# Logs and metrics
 *.log
+*.jsonl
+*_metrics.*
+*_metric.*
+gpu_metrics.*
+neural_*.jsonl
 logs/
+*.log.*
 
 # Temporary files
 tmp/
