@@ -1,0 +1,363 @@
+(* NeuronLang Grammar Specification v1.0
+   
+   Extended Backus-Naur Form (EBNF) for the NeuronLang programming language.
+   A native language for trinary neural computing with biological realism.
+   
+   Core Principles:
+   1. Trinary-first: Three states are fundamental (-1, 0, +1)
+   2. Temporal awareness: Time is a first-class citizen
+   3. Energy efficiency: Baseline state costs zero
+   4. Biological realism: Neurons fire and forget
+   5. Pattern-centric: Pattern matching is native
+*)
+
+(* ============ Program Structure ============ *)
+
+program = { import_statement }, { declaration } ;
+
+import_statement = "import", module_path, [ "as", identifier ] ;
+module_path = identifier, { ".", identifier } ;
+
+declaration = brain_declaration
+            | layer_declaration  
+            | pattern_declaration
+            | temporal_declaration
+            | function_declaration
+            | const_declaration ;
+
+(* ============ Brain Declaration ============ *)
+
+brain_declaration = "brain", identifier, "{", 
+                    { layer_statement },
+                    { synapse_statement },
+                    { behavior_statement },
+                    "}" ;
+
+layer_statement = "layer", identifier, "[", integer, "]", 
+                  { layer_attribute } ;
+
+layer_attribute = "type", "(", neuron_type, ")"
+                | "sparsity", "(", float, ")"
+                | "energy", "(", energy_mode, ")" ;
+
+neuron_type = "spiking" | "lif" | "izhikevich" | "trinary" ;
+energy_mode = "optimize" | "baseline" | float, "pJ" ;
+
+synapse_statement = "synapses", "{",
+                    { synapse_property },
+                    "}" ;
+
+synapse_property = "plasticity", ":", plasticity_rule
+                 | "delays", ":", delay_spec
+                 | "sparsity", ":", float ;
+
+plasticity_rule = "stdp", "(", stdp_params, ")"
+                | "hebbian", "(", float, ")"
+                | "none" ;
+
+stdp_params = "window", ":", time_value, 
+              ",", "ltp", ":", float,
+              ",", "ltd", ":", float ;
+
+delay_spec = "uniform", "(", time_value, ",", time_value, ")"
+           | time_value ;
+
+(* ============ Pattern Declaration ============ *)
+
+pattern_declaration = "pattern", identifier, "{",
+                      pattern_condition,
+                      pattern_action,
+                      "}" ;
+
+pattern_condition = "when", boolean_expression ;
+pattern_action = "then", statement ;
+
+(* ============ Temporal Declaration ============ *)
+
+temporal_declaration = "temporal", [ identifier ], "{",
+                       { temporal_statement },
+                       "}" ;
+
+temporal_statement = "remember", "last", integer, "spikes"
+                   | "correlate", "over", time_value, "windows"
+                   | "predict", "next", time_value ;
+
+(* ============ Layer Declaration ============ *)
+
+layer_declaration = "layer", identifier, "[", integer, "]", "{",
+                    { layer_body_statement },
+                    "}" ;
+
+layer_body_statement = "perceive", data_source
+                     | "neurons", ":", neuron_spec
+                     | "threshold", ":", voltage_value, [ "adaptive" ]
+                     | "refractory", ":", time_value
+                     | "decide", ":", "[", identifier_list, "]" ;
+
+data_source = "redis", "(", string, ")"
+            | "hyperliquid", "(", trading_config, ")"
+            | identifier, ".", identifier ;
+
+(* Trading and market data integration *)
+trading_config = "symbol", ":", string, 
+                 [ ",", "leverage", ":", integer ],
+                 [ ",", "mode", ":", trading_mode ] ;
+
+trading_mode = "paper" | "live" | "backtest" ;
+
+trading_statement = "trade", "{",
+                    "action", ":", trade_action, ",",
+                    "size", ":", float, ",",
+                    [ "stop_loss", ":", float, "," ],
+                    [ "take_profit", ":", float, "," ],
+                    "}" ;
+
+trade_action = "buy" | "sell" | "close" ;
+
+neuron_spec = neuron_type, [ "(", neuron_params, ")" ] ;
+
+(* Izhikevich neuron parameters *)
+neuron_params = izhikevich_params 
+              | lif_params
+              | general_params ;
+
+izhikevich_params = "a", ":", float, ",", "b", ":", float, ",",
+                    "c", ":", float, ",", "d", ":", float ;
+
+lif_params = "tau", ":", time_value, ",", "resistance", ":", float ;
+
+general_params = parameter, { ",", parameter } ;
+
+(* ============ Fire and Forget Mechanics ============ *)
+
+behavior_statement = "when", firing_condition, "{",
+                     { fire_action },
+                     "}" ;
+
+firing_condition = "membrane", comparison_op, voltage_value
+                 | identifier, comparison_op, expression ;
+
+fire_action = "fire!", "(", [ expression ], ")"
+            | "forget!", "(", forget_params, ")"
+            | "rest", "(", time_value, ")" ;
+
+forget_params = "membrane", ":", voltage_value,
+                [ ",", "current", ":", float ] ;
+
+(* ============ Function Declaration ============ *)
+
+function_declaration = "fn", identifier, "(", [ parameter_list ], ")",
+                       [ "->", type ], "{",
+                       { statement },
+                       "}" ;
+
+parameter_list = parameter, { ",", parameter } ;
+parameter = identifier, ":", type ;
+
+(* ============ Statements ============ *)
+
+statement = assignment_statement
+          | if_statement
+          | match_statement
+          | for_statement
+          | while_statement
+          | return_statement
+          | expression_statement ;
+
+assignment_statement = identifier, "=", expression ;
+
+if_statement = "if", boolean_expression, "{",
+               { statement },
+               "}", [ "else", "{", { statement }, "}" ] ;
+
+match_statement = "match", expression, "{",
+                  { match_arm },
+                  "}" ;
+
+match_arm = pattern, "=>", ( statement | expression ) ;
+
+pattern = spike_pattern
+        | tryte_pattern
+        | literal_pattern
+        | "_" ;
+
+spike_pattern = "[", { tryte_literal }, "]" ;
+tryte_pattern = tryte_literal ;
+literal_pattern = literal ;
+
+for_statement = "for", identifier, "in", expression, "{",
+                { statement },
+                "}" ;
+
+while_statement = "while", boolean_expression, "{",
+                  { statement },
+                  "}" ;
+
+return_statement = "return", [ expression ] ;
+expression_statement = expression, ";" ;
+
+(* ============ Expressions ============ *)
+
+expression = primary_expression
+           | binary_expression
+           | unary_expression
+           | call_expression
+           | field_expression
+           | index_expression ;
+
+primary_expression = literal
+                   | identifier
+                   | "(" expression ")" ;
+
+binary_expression = expression, binary_op, expression ;
+unary_expression = unary_op, expression ;
+call_expression = identifier, "(", [ argument_list ], ")" ;
+field_expression = expression, ".", identifier ;
+index_expression = expression, "[", expression, "]" ;
+
+argument_list = expression, { ",", expression } ;
+
+boolean_expression = expression, comparison_op, expression
+                   | boolean_expression, logical_op, boolean_expression
+                   | "not", boolean_expression
+                   | "(" boolean_expression ")" ;
+
+(* ============ Types ============ *)
+
+type = primitive_type
+     | array_type
+     | temporal_type
+     | neural_type ;
+
+primitive_type = "tryte" | "spike" | "bool" | "i32" | "f32" | "string" ;
+
+array_type = "[", type, ";", integer, "]"
+           | "[", type, "]" ;
+
+temporal_type = "spike", "<", time_value, ">"
+              | "train", "<", integer, ">"
+              | "window", "<", time_value, ">" ;
+
+neural_type = "neuron" | "layer" | "synapse" | "membrane" ;
+
+(* ============ Literals ============ *)
+
+literal = tryte_literal
+        | integer
+        | float
+        | string
+        | boolean
+        | voltage_value
+        | time_value ;
+
+tryte_literal = "-1" | "0" | "+1" 
+              | "Inhibited" | "Baseline" | "Activated" ;
+
+integer = digit, { digit } ;
+float = digit, { digit }, ".", { digit } ;
+string = '"', { character }, '"' ;
+boolean = "true" | "false" ;
+
+voltage_value = [ "-" ], digit, { digit }, "mV" ;
+time_value = digit, { digit }, [ ".", { digit } ], time_unit ;
+time_unit = "ms" | "us" | "s" | "minutes" | "hours" ;
+
+(* ============ Operators ============ *)
+
+binary_op = "+" | "-" | "*" | "/" | "%" | "**" ;
+comparison_op = "==" | "!=" | "<" | ">" | "<=" | ">=" ;
+logical_op = "and" | "or" | "xor" ;
+unary_op = "-" | "!" | "~" ;
+
+(* ============ Identifiers and Comments ============ *)
+
+identifier = letter, { letter | digit | "_" } ;
+identifier_list = identifier, { ",", identifier } ;
+
+comment = "//" { character } newline
+        | "/*" { character } "*/" ;
+
+(* ============ Character Classes ============ *)
+
+letter = "a" | "b" | "c" | "d" | "e" | "f" | "g" | "h" | "i" | "j" 
+       | "k" | "l" | "m" | "n" | "o" | "p" | "q" | "r" | "s" | "t" 
+       | "u" | "v" | "w" | "x" | "y" | "z"
+       | "A" | "B" | "C" | "D" | "E" | "F" | "G" | "H" | "I" | "J"
+       | "K" | "L" | "M" | "N" | "O" | "P" | "Q" | "R" | "S" | "T"
+       | "U" | "V" | "W" | "X" | "Y" | "Z" ;
+
+digit = "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" ;
+
+character = ? any printable character ? ;
+newline = ? line feed character ? ;
+
+(* ============ Special Constructs ============ *)
+
+(* Loopy Belief Propagation *)
+belief_statement = "propagate", "beliefs", "{",
+                   { belief_configuration },
+                   "}" ;
+
+belief_configuration = "iterations", ":", integer
+                     | "convergence", ":", float
+                     | "damping", ":", float ;
+
+message_passing = "message", "from", identifier, "to", identifier, 
+                  [ "with", "weight", float ] ;
+
+belief_update = "update", "belief", identifier, 
+                "using", belief_method ;
+
+belief_method = "sum_product" | "max_product" | "custom", "(", expression, ")" ;
+
+(* Meta-Learning (MAML-style) *)
+meta_learning_statement = "meta", "learn", "{",
+                          "inner_lr", ":", float, ",",
+                          "outer_lr", ":", float, ",",
+                          "tasks", ":", task_list,
+                          [ ",", "adaptation_steps", ":", integer ],
+                          "}" ;
+
+task_list = "[", task_definition, { ",", task_definition }, "]" ;
+
+task_definition = identifier | "task", "(", string, ")" ;
+
+adaptation_statement = "adapt", "to", identifier, 
+                       "with", integer, "steps" ;
+
+(* Energy annotations *)
+annotation = "@", identifier, [ "(", annotation_params, ")" ] ;
+annotation_params = expression, { ",", expression } ;
+
+(* Parallel execution *)
+parallel_statement = "parallel", "for", identifier, "in", expression, "{",
+                     { statement },
+                     "}" ;
+
+(* Memory operations *)
+memory_statement = "consolidate", "with", "ewc", "(", ewc_params, ")"
+                 | "synthesize", protein_synthesis
+                 | "compress", "to", "dna" ;
+
+(* Protein Synthesis with biological accuracy *)
+protein_synthesis = protein_type, [ "for", time_value ], 
+                    [ "at", "synapse", identifier ] ;
+
+protein_type = "CREB" | "BDNF" | "Arc" | "PKMzeta" | "proteins" ;
+
+protein_regulation = "upregulate", protein_type, "by", float, "%"
+                   | "downregulate", protein_type, "by", float, "%" ;
+
+ewc_params = "lambda", ":", float,
+             [ ",", "tasks", ":", integer ] ;
+
+(* Optimization directives *)
+optimize_directive = "optimize", "{",
+                     { optimization_target },
+                     "}" ;
+
+optimization_target = "target_sparsity", ":", float
+                    | "energy_per_spike", ":", energy_value
+                    | "baseline_cost", ":", integer ;
+
+energy_value = float, "pJ" | float, "nJ" | float, "uJ" ;

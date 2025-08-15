@@ -1,0 +1,58 @@
+# Build artifacts
+target/
+*.o
+*.so
+*.dll
+*.dylib
+
+# Executables (but keep demo executables)
+/bulletproof
+/bulletproof_grade_a
+/bulletproof_optimized
+/bulletproof_true_a
+/analyze_performance
+/demo_hoberman
+/live_hoberman
+/stress_test
+/test_ripple
+/debug
+/foundation_analysis
+/foundation_analysis_v2
+/foundation_live
+/test_suite
+
+# Keep these demo executables
+!bulletproof_demo
+!bulletproof_chat
+
+# Logs and metrics
+*.log
+*.csv
+logs/
+
+# Checkpoint files
+checkpoint_*.json
+
+# IDE files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.env
+
+# Cargo lock files in subdirectories
+*/Cargo.lock
+!Cargo.lock

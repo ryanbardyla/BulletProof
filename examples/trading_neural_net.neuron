@@ -1,0 +1,151 @@
+// NeuronLang Trading Neural Network
+// Revolutionary trinary computing for market prediction
+
+model TradingNeuralNet {
+    // NLP sentiment layer (trinary sentiment: negative/neutral/positive)
+    nlp_layer: tensor<tryte, [100, 64]>,
+    
+    // Entry signal layer  
+    entry_layer: tensor<tryte, [64, 32]>,
+    
+    // Exit signal layer
+    exit_layer: tensor<tryte, [32, 3]>,  // hold/partial/full_exit
+    
+    // Protein-based memory for pattern recognition
+    memory_proteins: {
+        CREB: 0.1,      // Pattern consolidation
+        Arc: 0.05,      // Synaptic plasticity  
+        BDNF: 0.1,      // Neural growth
+        CaMKII: 0.3,    // Calcium signaling
+    }
+}
+
+// Process market sentiment with trinary logic
+@differentiable
+fn process_sentiment(
+    news_features: tensor<f32, [100]>,
+    social_features: tensor<f32, [100]>
+) -> tensor<tryte, [100]> {
+    
+    // Convert float features to trinary sentiment
+    let sentiment = parallel for i in 0..100 {
+        let combined = news_features[i] + social_features[i];
+        
+        match combined {
+            x if x > 0.33 => activated,   // Positive sentiment
+            x if x < -0.33 => inhibited,  // Negative sentiment  
+            _ => baseline,                // Neutral sentiment
+        }
+    };
+    
+    return sentiment;
+}
+
+// Generate trading signals with sparse computation
+@differentiable  
+fn generate_signals(model: TradingNeuralNet, market_data: MarketData) -> TradingSignals {
+    // Convert market data to trinary
+    let sentiment = process_sentiment(market_data.news, market_data.social);
+    let price_trytes = quantize_prices(market_data.prices);
+    
+    // Sparse NLP processing (skip neutral sentiment)
+    let nlp_output = sparse sentiment {
+        skip_baseline: true;  // Skip neutral sentiment - 60% efficiency gain
+    } |> activate_trytes(model.nlp_layer);
+    
+    // Entry signal generation with protein modulation
+    let entry_signals = nlp_output |> neuron {
+        state: baseline,
+        threshold: 1.2,
+        proteins: {
+            CREB: 0.7,    // High pattern recognition
+            PKA: 0.6,     // Strong synaptic response
+        }
+    } |> activate_trytes(model.entry_layer);
+    
+    // Exit signal generation
+    let exit_signals = entry_signals |> activate_trytes(model.exit_layer);
+    
+    // Memory consolidation for learned patterns
+    consolidate (nlp_output, entry_signals, exit_signals) {
+        phase: LateLTP;
+    };
+    
+    return TradingSignals {
+        entry: entry_signals[0],  // Enter position?
+        exit_type: exit_signals,  // [hold, partial, full]
+        confidence: protein_concentration(CREB),
+    };
+}
+
+// Train on historical market data
+fn train_trading_model(
+    model: TradingNeuralNet,
+    historical_data: tensor<MarketData, [10000]>,
+    outcomes: tensor<f32, [10000]>
+) -> TradingNeuralNet {
+    
+    parallel for epoch in 0..50 {
+        let mut total_profit = 0.0;
+        
+        for (data, actual_outcome) in historical_data.zip(outcomes) {
+            let signals = generate_signals(model, data);
+            let predicted_profit = execute_trade_simulation(signals, data);
+            
+            let error = (predicted_profit - actual_outcome).abs();
+            
+            // Protein synthesis when model learns good patterns
+            if error < 0.1 {
+                protein CREB synthesize(0.8);  // Consolidate good patterns
+                protein Arc synthesize(0.6);   // Strengthen synapses
+            } else {
+                protein CREB synthesize(0.3);  // Weak consolidation
+            }
+            
+            // Backpropagation through trytes
+            let gradients = grad(error, model.parameters());
+            model.update_trytes(gradients);
+            
+            total_profit += predicted_profit;
+        }
+        
+        // Memory reconsolidation every 10 epochs
+        if epoch % 10 == 0 {
+            reconsolidate model.memory_patterns {
+                phase: Reconsolidating;
+            };
+            
+            println!("Epoch {}: Total profit = {}", epoch, total_profit);
+        }
+    }
+    
+    return model;
+}
+
+// Market data structure
+struct MarketData {
+    prices: tensor<f32, [100]>,     // OHLCV data
+    news: tensor<f32, [100]>,       // News sentiment scores
+    social: tensor<f32, [100]>,     // Social media sentiment
+    volume: tensor<f32, [100]>,     // Trading volume
+}
+
+// Trading signal output
+struct TradingSignals {
+    entry: tryte,        // inhibited=short, baseline=hold, activated=long
+    exit_type: tensor<tryte, [3]>,  // [hold, partial_exit, full_exit]
+    confidence: f32,     // CREB protein concentration
+}
+
+// Quantize continuous prices to trinary signals
+fn quantize_prices(prices: tensor<f32, [100]>) -> tensor<tryte, [100]> {
+    let price_changes = prices[1:] - prices[:-1];
+    
+    parallel for change in price_changes {
+        match change {
+            x if x > 0.01 => activated,   // Price up
+            x if x < -0.01 => inhibited,  // Price down
+            _ => baseline,                // Sideways
+        }
+    }
+}

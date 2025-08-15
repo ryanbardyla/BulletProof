@@ -1,0 +1,84 @@
+[package]
+name = "neuronlang-core"
+version = "0.1.0"
+edition = "2021"
+authors = ["Ryan & Claude"]
+description = "The world's first trinary neural computing system"
+
+[lib]
+name = "neuronlang_core"
+path = "src/lib.rs"
+
+[[bin]]
+name = "neuronlang"
+path = "src/main.rs"
+
+[dependencies]
+# For date/time in our historic launch
+chrono = { version = "0.4", features = ["serde"] }
+
+# For async operations
+tokio = { version = "1.35", features = ["full"] }
+
+# For numerical operations
+ndarray = "0.15"
+
+# For random numbers
+fastrand = "2.0"
+
+# For parallel processing
+crossbeam = "0.8"
+num_cpus = "1.16"
+
+# For system information
+sysinfo = "0.30"
+
+# For GPU detection (optional)
+nvml-wrapper = { version = "0.9", optional = true }
+
+# For half-precision floats
+half = "2.3"
+
+# For Redis connectivity
+redis = { version = "0.24", features = ["tokio-comp"] }
+
+# For JSON serialization
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+
+# For error handling
+thiserror = "1.0"
+anyhow = "1.0"
+
+# For logging
+tracing = "0.1"
+
+# For HTTP requests (if needed for ClickHouse)
+reqwest = { version = "0.11", features = ["json"] }
+
+# For GPU acceleration (optional)
+cudarc = { version = "0.12", optional = true }
+ash = { version = "0.38", optional = true }
+
+# For random numbers
+rand = "0.8"
+
+[dev-dependencies]
+criterion = { version = "0.5", features = ["html_reports"] }
+
+[[bench]]
+name = "trinary_vs_binary"
+harness = false
+
+[features]
+default = []
+cuda = ["nvml-wrapper", "cudarc", "ash"]
+
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
+
+[profile.dev]
+opt-level = 0
+debug = true

@@ -1,0 +1,46 @@
+// Hello Neural Network - First NeuronLang program!
+
+@differentiable
+fn forward(x: tensor<f32, [batch, 784]>) -> tensor<f32, [batch, 10]> {
+    // Neural network layers with pipeline operator
+    return x 
+        |> linear(256) 
+        |> relu 
+        |> dropout(0.2)
+        |> linear(10)
+        |> softmax
+}
+
+// Parallel training loop
+parallel for batch in dataloader {
+    let pred = forward(batch.images)
+    let loss = cross_entropy(pred, batch.labels)
+    backward(loss)
+}
+
+// Pattern matching on tensor shapes
+fn process(input: tensor) -> tensor {
+    match input.shape {
+        [_, 28, 28] => {
+            // 2D image - apply convolution
+            input |> conv2d(32, kernel=3) |> maxpool2d(2)
+        }
+        [_, 784] => {
+            // Flattened - apply linear
+            input |> linear(256) |> relu
+        }
+        _ => {
+            // Unknown shape - return as is
+            input
+        }
+    }
+}
+
+// Training configuration with built-in syntax
+train model on dataset {
+    optimizer: Adam(lr=0.001, betas=[0.9, 0.999]),
+    loss: CrossEntropy,
+    metrics: [accuracy, f1_score],
+    epochs: 100,
+    device: auto
+}

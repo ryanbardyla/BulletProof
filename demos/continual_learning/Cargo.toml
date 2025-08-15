@@ -1,0 +1,73 @@
+[package]
+name = "continual_learning_demo"
+version = "0.1.0"
+edition = "2021"
+authors = ["NeuronLang Team"]
+description = "Demonstration of continual learning without catastrophic forgetting"
+
+[[bin]]
+name = "continual_demo"
+path = "src/main.rs"
+
+[[bin]]
+name = "continual_real"
+path = "src/main_real.rs"
+
+[[bin]]
+name = "test_mnist"
+path = "src/test_mnist.rs"
+
+[[bin]]
+name = "test_forward_pass"
+path = "src/test_forward_pass.rs"
+
+[[bin]]
+name = "simple_forward_test"
+path = "src/simple_forward_test.rs"
+
+[[bin]]
+name = "test_backward_pass"
+path = "src/test_backward_pass.rs"
+
+[[bin]]
+name = "simple_backward_test"
+path = "src/simple_backward_test.rs"
+
+[[bin]]
+name = "gpu_accelerated_test"
+path = "src/gpu_accelerated_test.rs"
+
+[[bin]]
+name = "killer_demo"
+path = "src/killer_demo.rs"
+
+[lib]
+name = "continual_learning"
+path = "src/lib.rs"
+
+[dependencies]
+# Core NeuronLang dependencies
+neuronlang_project = { path = "../../" }
+
+# ML dataset loading
+mnist = "0.5"
+ndarray = "0.16"
+image = "0.25"
+
+# Utilities
+anyhow = "1.0"
+tokio = { version = "1.40", features = ["full"] }
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+chrono = "0.4"
+colored = "2.1"
+indicatif = "0.17"
+
+# Plotting for results
+plotters = "0.3"
+
+# Random number generation
+rand = "0.8"
+fastrand = "2.0"

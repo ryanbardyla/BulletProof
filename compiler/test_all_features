@@ -1,0 +1,24 @@
+🧬 NeuronLang Compiler v0.1.0
+═══════════════════════════════
+⚡ Direct to machine code - NO LLVM!
+⚡ Trinary computing with ZERO energy baseline!
+
+📖 Lexing...
+   Found 259 tokens
+🌳 Parsing...
+   Built AST with 1 top-level declarations
+⚡ Generating machine code...
+   Generated 9401 bytes of x86_64 machine code
+💾 Writing output to a.out...
+   Output written successfully
+   Made executable
+═══════════════════════════════
+✅ Compilation successful!
+
+🚀 Features:
+   • Trinary computing (-1, 0, +1)
+   • ZERO energy baseline
+   • Direct to machine code (no LLVM!)
+   • Self-hosting ready
+
+Run with: ./a.out

@@ -1,0 +1,81 @@
+// Protein synthesis and memory consolidation
+// Based on Kandel's Nobel Prize work on CREB-PKA cascade
+
+// Define a neuron with protein dynamics
+neuron MemoryNeuron {
+    state: tryte = baseline;
+    threshold: f32 = 1.5;
+    
+    // Protein concentrations
+    proteins: {
+        CREB: 0.1,    // Baseline CREB
+        PKA: 0.2,     // Baseline PKA
+        MAPK: 0.15,   // Baseline MAPK
+        CaMKII: 0.3,  // Calcium-dependent kinase
+    }
+}
+
+// Synaptic plasticity with protein synthesis
+synapse PlasticSynapse {
+    weight: f32 = 1.0;
+    plasticity: tryte = baseline;
+    
+    // LTP induction when proteins activate
+    fn potentiate(signal: f32) -> void {
+        if signal > 0.7 {
+            // Trigger protein synthesis
+            protein CREB synthesize(0.8) when PKA > 0.5;
+            
+            // Transition to late-phase LTP
+            consolidate pattern {
+                phase: LateLTP;
+            };
+        }
+    }
+}
+
+// Memory consolidation phases
+fn form_memory(pattern: tensor<tryte, [512]>) -> void {
+    // Short-term memory (< 1 hour)
+    let short_term = neuron {
+        state: activated,
+        threshold: 1.0,
+        proteins: { CREB: 0.3, PKA: 0.4 }
+    };
+    
+    // Early LTP (1-3 hours) 
+    if short_term.proteins.CREB > 0.5 {
+        consolidate pattern {
+            phase: EarlyLTP;
+        };
+    }
+    
+    // Late LTP requires protein synthesis
+    if short_term.proteins.CREB > 0.7 {
+        protein CREB synthesize(0.9);
+        protein Arc synthesize(0.6);
+        
+        consolidate pattern {
+            phase: LateLTP;
+        };
+    }
+}
+
+// Reconsolidation during memory recall
+fn recall_and_update(memory: tensor<tryte, [512]>) -> tensor<tryte, [512]> {
+    // Recall destabilizes memory
+    reconsolidate memory {
+        phase: Reconsolidating;
+    };
+    
+    // Update with new information
+    let updated = memory |> modify |> strengthen;
+    
+    // Re-consolidate with protein synthesis
+    protein CREB synthesize(0.75);
+    consolidate updated {
+        phase: Consolidated;
+    };
+    
+    return updated;
+}

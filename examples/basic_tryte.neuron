@@ -1,0 +1,45 @@
+// Basic Tryte operations in NeuronLang
+// Demonstrates trinary computing primitives
+
+// Single neuron with trinary state
+fn process_signal(input: tryte) -> tryte {
+    let state = baseline;  // Start at zero-energy baseline
+    
+    // Tryte arithmetic (balanced ternary)
+    let excited = input + activated;
+    let dampened = input + inhibited;
+    
+    // Pattern matching on trytes
+    match input {
+        inhibited => activated,  // Invert
+        baseline => baseline,    // Stay at rest
+        activated => inhibited,  // Suppress
+    }
+}
+
+// Tryte vector operations
+fn tryte_convolution(signal: tensor<tryte, [1024]>) -> tensor<tryte, [1024]> {
+    let kernel = tensor<tryte, [3]> {
+        data: [inhibited, activated, inhibited]
+    };
+    
+    // Sparse computation - skip baseline neurons
+    sparse signal {
+        skip_baseline: true
+    } |> convolve(kernel)
+}
+
+// Energy calculation from tryte states
+fn calculate_energy(network: tensor<tryte, [100, 100]>) -> f32 {
+    let mut energy = 0.0;
+    
+    parallel for neuron in network {
+        energy += match neuron {
+            inhibited => -1.0,
+            baseline => 0.0,   // Zero energy at rest!
+            activated => 1.0,
+        };
+    }
+    
+    return energy;
+}
