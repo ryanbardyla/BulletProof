@@ -78,6 +78,11 @@ site/
 coverage/
 lcov.info
 
+# JSON result files
+*_results.json
+*_report.json
+checkpoint*.json
+
 # OS files
 Thumbs.db
 ehthumbs.db
