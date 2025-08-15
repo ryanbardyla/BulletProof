@@ -165,7 +165,6 @@ MIT License - see [LICENSE](LICENSE) file for details.
 ## 💬 Contact
 
 - GitHub: [@ryanbardyla](https://github.com/ryanbardyla)
-- Email: [contact@neuronlang.ai](mailto:contact@neuronlang.ai)
 
 ---
 
