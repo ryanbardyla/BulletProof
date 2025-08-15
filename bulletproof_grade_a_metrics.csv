@@ -1,0 +1,2 @@
+timestamp,operations,errors,l1_baseline,l2_baseline,l3_baseline,ram_baseline,efficiency,latency_ns
+0,1,0,199998,249991,249973,299984,9999,55215097

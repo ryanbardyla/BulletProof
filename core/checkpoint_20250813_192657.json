@@ -1,0 +1,12 @@
+{
+  "patterns": 1,
+  "runtime_seconds": 1132,
+  "timestamp": 1755113217,
+  "top_patterns": [
+    [
+      "brain_cluster",
+      0.5
+    ]
+  ],
+  "total_samples": 112000
+}

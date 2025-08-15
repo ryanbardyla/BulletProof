@@ -1,0 +1,24 @@
+{
+  "patterns": 4,
+  "runtime_seconds": 90,
+  "timestamp": 1755113709,
+  "top_patterns": [
+    [
+      "velocity_spike_brain",
+      18.0
+    ],
+    [
+      "brain_cluster",
+      0.5
+    ],
+    [
+      "velocity_spike_social",
+      8.989999771118164
+    ],
+    [
+      "velocity_spike_price",
+      9.0
+    ]
+  ],
+  "total_samples": 9000
+}

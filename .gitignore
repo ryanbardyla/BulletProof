@@ -1,58 +1,95 @@
 # Build artifacts
-target/
-*.o
-*.so
+/target/
+**/target/
+Cargo.lock
+
+# Compiled binaries
+*.exe
 *.dll
+*.so
 *.dylib
+a.out
 
-# Executables (but keep demo executables)
-/bulletproof
-/bulletproof_grade_a
-/bulletproof_optimized
-/bulletproof_true_a
-/analyze_performance
-/demo_hoberman
-/live_hoberman
-/stress_test
-/test_ripple
-/debug
-/foundation_analysis
-/foundation_analysis_v2
-/foundation_live
-/test_suite
+# Test binaries and outputs
+test_*
+!test_*.rs
+!test_*.nl
+*_test
+*_demo
+!*_demo.rs
+!demos/
 
-# Keep these demo executables
-!bulletproof_demo
-!bulletproof_chat
+# Weight files
+*.weights
+!examples/*.weights
 
-# Logs and metrics
-*.log
-*.csv
-logs/
+# Debug files
+*.pdb
+*.dSYM/
+*.su
+*.idb
 
-# Checkpoint files
-checkpoint_*.json
-
-# IDE files
-.idea/
+# IDE
 .vscode/
+.idea/
 *.swp
 *.swo
-
-# OS files
+*~
 .DS_Store
-Thumbs.db
 
 # Python
 __pycache__/
-*.pyc
-*.pyo
-*.pyd
-.Python
-env/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
+.venv/
 venv/
-.env
 
-# Cargo lock files in subdirectories
-*/Cargo.lock
-!Cargo.lock
+# Data files (except examples)
+*.dat
+*.bin
+!examples/*.dat
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.bak
+*.backup
+
+# Local environment
+.env.local
+.env.*.local
+
+# Documentation build
+docs/_build/
+site/
+
+# Coverage
+*.gcov
+*.gcda
+*.gcno
+coverage/
+lcov.info
+
+# OS files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Neural network specific
+checkpoint/
+models/
+!examples/models/
+
+# Keep important files
+!README.md
+!LICENSE
+!Cargo.toml
+!.gitignore
